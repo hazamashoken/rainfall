@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#define _GNU_SOURCE
+#include <stdio.h>
 #include <unistd.h>
 
 int main(int argc, char **argv)
@@ -28,6 +28,6 @@ int main(int argc, char **argv)
   {
     fwrite("No !\n", 1, 5, stderr);
   }
-  
+
   return (0);
 }
