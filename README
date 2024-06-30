@@ -1,0 +1,14 @@
+not md format
+
+how to use gdb effectively
+
+gdb command
+- help <command> : describe the command
+
+- info : List of info subcommands 
+- info functions : see all locals functions
+- info registers : see all registers
+- disas <function> : see disassembled function code
+- breakpoint | b <function>|*<address> : set breakpoint at function or address
+- run | r : run the program
+- step : Step program until it reaches a different source line
