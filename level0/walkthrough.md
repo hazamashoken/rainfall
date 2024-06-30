@@ -1,3 +1,5 @@
+# level0
+
 In level0 we have a bin 'level0' with suid of root
 on running it, it throw Segfault
 on running it with "helo", it print "No !"
@@ -69,13 +71,15 @@ on using `objdump` on the bin, we see that there's an cmp to a value in main
 ```
 
 we can see here that there's an cmp instruction call on value $0x1a7 (423)
+
 ```sh
 [...]
  8048ed9:       3d a7 01 00 00          cmp    $0x1a7,%eax
 [...]
 ```
 
-upon running 
+upon running
+
 ```sh
 >./level0 423
 $ 
@@ -92,11 +96,13 @@ with this we can try to navigate to /home/level1
 
 but it doesn't work...
 
-checking 
+checking
+
 ```sh
 $ pwd
 /home/user/level0
 ```
+
 ahh
 
 ```sh
@@ -120,4 +126,3 @@ $ cat .pass
 ```
 
 done
-

