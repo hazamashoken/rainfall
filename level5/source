@@ -9,7 +9,6 @@ void o(void)
 
 void n(void)
 {
-  short sVar2;
   char buf [520];
   
   fgets(buf,512,stdin);
