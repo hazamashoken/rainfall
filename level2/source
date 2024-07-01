@@ -1,0 +1,12 @@
+void p() {
+    char buf[80];
+    // [...] stuffs happen here
+    gets(buf - 4);
+    // [...] stuffs happen here
+}
+
+
+int main(void) {
+    p();
+    return (0);
+}
