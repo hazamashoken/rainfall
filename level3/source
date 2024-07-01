@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+void v(void){
+    char buf[520];
+
+    fgets(buf, 520, stdin);
+
+    printf(buf);
+    // [...]
+}
+
+int main(void) {
+    v();
+    return 0;
+}
