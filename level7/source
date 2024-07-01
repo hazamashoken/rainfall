@@ -1,8 +1,36 @@
-void m(void){
-    return ;
+
+#include <time.h>
+#include <stdio.h>
+
+void m(void)
+{
+  time_t t;
+  
+  t = time((time_t *)0x0);
+  printf("%s - %d\n", c, t);
+  return;
 }
 
 
-int main(int argc, char **argv) {
-    return 0;
+int main(int argc,char ** argv)
+{
+  char **str;
+  char *str2;
+  char **str3;
+  FILE *file;
+  
+  str = (char **)malloc(8);
+  *str = 1;
+  str2 = malloc(8);
+  str[1] = str2;
+  str3 = (char **)malloc(8);
+  *str3 = 2;
+  str2 = malloc(8);
+  str3[1] = str2;
+  strcpy(str[1], argv[1]);
+  strcpy(str3[1], argv[2]);
+  file = fopen("/home/user/level8/.pass","r");
+  fgets(c, 0x44, file);
+  puts("~~");
+  return 0;
 }
