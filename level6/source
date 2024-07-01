@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void m(void){
+    puts("Nope");
+    return ;
+}
+
+void n(void) {
+    system("/bin/cat /home/user/level7/.pass");
+}
+
+void main(int argc, char ** argv)
+{
+  char *str;
+  char **arr;
+  
+  str = (char *)malloc(64);
+  arr = (char **)malloc(4);
+  *arr = m;
+  strcpy(str,*(char **)(argv + 1));
+  (**arr)();
+  return;
+}
+
