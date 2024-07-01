@@ -7,6 +7,11 @@ void v(void){
 
     printf(buf);
     // [...]
+    int m;
+    if (m == 64) {
+        fwrite("Wait what?!\n", 1, 13, stdout);
+        system("/bin/sh");
+    }
 }
 
 int main(void) {

