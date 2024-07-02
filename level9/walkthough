@@ -126,11 +126,11 @@ Breakpoint 1, 0x080485f8 in main ()
 $1 = {<text variable, no debug info>} 0xb7d86060 <system>
 ```
 
-system is at `0xb7d86060`
+system() is at `0xb7d86060`
 
-replace the address pointed by eax to a system() call. 
-For this we need to write system() address then put 104 junk bytes to overflow and then put the address of eax which is where we want to overwrite. 
-Everything after will be parameter to the system() call, so let's add /bin/sh string to get a shell.
+replace the address pointed by eax to a system() call.
+For this we need to write system() address then put 104 junk bytes to overflow and then put the address of eax which is where we want to overwrite.
+Everything after will be parameter to the system() call, so add /bin/sh string to get a shell.
 
 offset 108
 
