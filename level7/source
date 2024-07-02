@@ -1,36 +1,36 @@
-
-#include <time.h>
 #include <stdio.h>
+#include <time.h>
 
-void m(void)
+// Globals
+char c[80];
+
+void m()
 {
-  time_t t;
+    time_t t;
   
-  t = time((time_t *)0x0);
-  printf("%s - %d\n", c, t);
-  return;
+    t = time(NULL);
+    printf("%s - %d\n", c, t);
 }
 
-
-int main(int argc,char ** argv)
+int main(int argc, char **argv)
 {
-  char **str;
-  char *str2;
-  char **str3;
-  FILE *file;
-  
-  str = (char **)malloc(8);
-  *str = 1;
-  str2 = malloc(8);
-  str[1] = str2;
-  str3 = (char **)malloc(8);
-  *str3 = 2;
-  str2 = malloc(8);
-  str3[1] = str2;
-  strcpy(str[1], argv[1]);
-  strcpy(str3[1], argv[2]);
-  file = fopen("/home/user/level8/.pass","r");
-  fgets(c, 0x44, file);
-  puts("~~");
-  return 0;
+    char** array1;
+    char* string2;
+    char** array3;
+    FILE *f;
+
+    string1 = (undefined4 *)malloc(8);
+    array1[0] = 0x1;
+    string2 = malloc(8);
+    array1[1] = string2;
+    array3 = malloc(8);
+    array3[0] = 0x2;
+    string2 = malloc(8);
+    array3[1] = string2;
+    strcpy((char *)array1[1], argv[1]);
+    strcpy((char *)array3[1], argv[2]);
+    f = fopen("/home/user/level8/.pass","r");
+    fgets(c, 68, f);
+    puts("~~");
+    return 0;
 }
