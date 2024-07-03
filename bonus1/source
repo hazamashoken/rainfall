@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+nt main(int argc, char **argv)
+{
+    int ret;
+    char buffer[40];
+    int number;
+
+    number = atoi(argv[1]);
+    if (number < 10)
+    {
+        memcpy(buffer, argv[2], number * 4);
+        if (number == 0x574f4c46)
+        {
+            execl("/bin/sh", "sh", NULL);
+        }
+        ret = 0;
+    }
+    else {
+        ret = 1;
+    }
+    return ret;
+}
