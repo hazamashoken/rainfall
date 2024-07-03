@@ -6,8 +6,8 @@
 int main(int argc, char **argv)
 {
   char *sh;
-  gid_t gid;
-  uid_t uid;
+  unsigned int gid;
+  unsigned int uid;
   char *arg[2];
 
   if (atoi(argv[1]) == 423)

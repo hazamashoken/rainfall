@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 void run(void){
-    fwrite("Good... Wait what?\n", 1, 20, stdin);
+    fwrite("Good... Wait what?\n", 1, 20, stdout);
     system("/bin/sh");
 }
 
