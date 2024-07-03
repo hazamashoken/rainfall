@@ -20,8 +20,8 @@ int main(int argc, char **argv){
 
     if (argc == 3) {
         bzero(buf, 19);
-        strncpy();
-        strncpy();
+        strncpy(buf, argv[1], 40);
+        strncpy(&buf[41], argv[2], 32);
         env = getenv("LANG");
         if (env != 0 ) {
             if (memcmp(env, "fi", 2) == 0) {

