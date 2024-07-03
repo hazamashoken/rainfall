@@ -81,7 +81,7 @@ End of assembler dump.
 
 looking at the disasembled code, we see that `n()` can be use for format string attack.
 
-we can overwrite an address with `o()`'s address.
+we can overwrite an address with `o()`'s address in exit.
 
 ```sh
 (gdb) disas exit
@@ -92,7 +92,7 @@ Dump of assembler code for function exit@plt:
 End of assembler dump.
 ```
 
-looking in exitwe see `0x8049838` where we can try to overwrite the address to point to `o()`
+looking in exit we see `0x8049838` where we can try to overwrite the address to point to `o()`
 
 payload:
 

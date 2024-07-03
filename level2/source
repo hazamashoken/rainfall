@@ -1,8 +1,17 @@
+#include <stdio.h>
+
 void p() {
-    char buf[80];
-    // [...] stuffs happen here
+    char buf[76];
+    void *ret;
+
+    fflush(stdout);
     gets(buf - 4);
-    // [...] stuffs happen here
+    if (((unsigned int)ret & 0xb0000000) == 0xb0000000){
+        printf("(%p)\n", ret);
+        exit(1);
+    }
+    puts(buf);
+    return(strdup(buf));
 }
 
 

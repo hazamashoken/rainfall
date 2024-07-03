@@ -189,15 +189,15 @@ if the buffer match
 
 if will do the following
 
-auth: call malloc(4) then if buffer if buffer - 5 len is less than or equal to 30. It will strcpy into auth
+auth: call malloc(4) then if buffer if (buffer + 5) len is less than or equal to 30. It will strcpy into auth
 
 reset: call free on auth malloc
 
 service: strdup buffer + 7
 
-login: call sh if auth + 32 is not empty else fwrite Password:
+login: call sh if auth + 32 is not empty else fwrite "Password:\n"
 
-since auth only malloc 4 byte if it we were to call service after auth with more buffer more than 32 
+since auth only malloc 4 byte if we were to call service after auth with more buffer more than 32 
 it will set the auth + 32 to the buffer from fget.
 
 ```sh

@@ -27,7 +27,7 @@ so the buffer should look like this
 
 to create the payload argv[1] will contain the NOP enough to escape both buffer in `pp()` and some space for the NOP sledge zone and end with shell code.
 
-then in argv[2] iw should contain 20 bytes with 9 bytes of anything to the eip then the address to the NOP zone and fill the rest of 20 bytes or more with anything ( prefeable NOP or A ) 
+then in argv[2] it should contain 20 bytes with 9 bytes of anything to the eip then the address to the NOP zone and fill the rest of 20 bytes or more with anything ( prefeable NOP or A ) 
 
 the final payload is this, and also keep the pipe open with cat
 

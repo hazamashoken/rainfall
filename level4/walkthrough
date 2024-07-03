@@ -27,7 +27,9 @@ End of assembler dump.
 (gdb) x/s 0x8048590
 0x8048590:       "/bin/cat /home/user/level5/.pass"
 
-At +35 fgets is called and the result in eax is put onto the stack and passed to function p. At +54 the value at memory address 0x8049810 is compared to the value 0x1025544 (16930116 decimal). These numbers are compared to trigger the call to system(). We will need these numbers later.
+At +35 fgets is called and the result in eax is put onto the stack and passed to function p.
+At +54 the value at memory address 0x8049810 is compared to the value 0x1025544 (16930116 decimal). 
+These numbers are compared to trigger the call to system(). We will need these numbers later.
 
 At +66 the string sent to system() shows the content of the .pass file in level5.
 

