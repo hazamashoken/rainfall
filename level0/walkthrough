@@ -4,7 +4,7 @@ In level0 we have a bin 'level0' with suid of root
 on running it, it throw Segfault
 on running it with "helo", it print "No !"
 this mean there's an comparison check somewhere
-on using `objdump` on the bin, we see that there's an cmp to a value in main
+on using `gdb` on the bin, we see that there's an cmp to a value in main
 
 ```sh
 [...]
